@@ -21,3 +21,5 @@ Ex.
 ```
  java.lang:type=OperatingSystem@Arch\n
 ```
+
+Send \q to quit

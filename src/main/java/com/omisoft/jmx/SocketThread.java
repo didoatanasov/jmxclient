@@ -68,7 +68,10 @@ public class SocketThread implements Runnable {
     while (runFlag) {
       try {
         String query = reader.readLine();
-        writer.println("ECHO:" + query);
+        if (query.equals("\\q")) {
+          runFlag = false;
+          continue;
+        }
         String[] queryParams = query.split("@");
         MBeanServerConnection mbeanConn = jmxConnector.getMBeanServerConnection();
         ObjectName objectName = new ObjectName(queryParams[0]);
@@ -81,6 +84,11 @@ public class SocketThread implements Runnable {
         writer.println("ERROR:" + e.getMessage());
         writer.flush();
       }
+    }
+    try {
+      s.close();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
 
   }
