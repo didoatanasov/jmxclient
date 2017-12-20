@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '2.0.0'
+}
+
+group 'com.omisoft.jmx'
+version '1.0-SNAPSHOT'
+
+
+sourceCompatibility = 1.8
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.omisoft.jmx.Client'
+    }
+
+}
+repositories {
+    mavenCentral()
+    jcenter()
+    flatDir {
+        dirs 'lib'
+    }
+//    maven { url 'http://repo.omisoft.eu:8081/artifactory/virtual' }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+shadowJar {
+    baseName = 'jmxclient'
+    mergeServiceFiles()    //For Merging Service Descriptor Files
+}
