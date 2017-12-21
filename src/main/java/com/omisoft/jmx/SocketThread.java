@@ -34,8 +34,7 @@ public class SocketThread implements Runnable {
   @Override
   public void run() {
     boolean runFlag = true;
-    System.out.println("Enter URL");
-    String connectionURL = null;
+    String connectionURL;
     try {
       connectionURL = reader.readLine();
     } catch (IOException e) {
@@ -46,8 +45,6 @@ public class SocketThread implements Runnable {
     String host = args[0];  // or some A.B.C.D
     int port = Integer.parseInt(args[1]);
     String url = "service:jmx:rmi:///jndi/rmi://" + host + ":" + port + "/jmxrmi";
-    System.out.println("CONNECTION URL:" + url);
-    writer.println("Connected to " + url);
     writer.flush();
     JMXServiceURL serviceUrl = null;
     try {
