@@ -7,20 +7,15 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.Socket;
-import java.util.Set;
-import javax.management.AttributeNotFoundException;
-import javax.management.InstanceNotFoundException;
-import javax.management.MBeanException;
 import javax.management.MBeanServerConnection;
-import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
-import javax.management.ReflectionException;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 
 public class SocketThread implements Runnable {
 
+  public static final String ERROR_STRING = "ERROR_STRING:";
   private final Socket s;
   private final BufferedReader reader;
   private final PrintWriter writer;
@@ -51,15 +46,21 @@ public class SocketThread implements Runnable {
       serviceUrl = new JMXServiceURL(url);
     } catch (MalformedURLException e) {
       e.printStackTrace();
-      writer.println("ERROR:" + e.getMessage());
+      writer.println(ERROR_STRING + e.getMessage());
 
     }
     JMXConnector jmxConnector = null;
     try {
       jmxConnector = JMXConnectorFactory.connect(serviceUrl, null);
-    } catch (IOException e) {
+    } catch (Exception e) {
       e.printStackTrace();
-      writer.println("ERROR:" + e.getMessage());
+      writer.println("ERROR_STRING:" + e.getMessage());
+      try {
+        s.close();
+        return;
+      } catch (IOException e1) {
+        e1.printStackTrace();
+      }
 
     }
     while (runFlag) {
@@ -76,9 +77,9 @@ public class SocketThread implements Runnable {
         writer.println(value);
         writer.flush();
 
-      } catch (IOException | MalformedObjectNameException | InstanceNotFoundException | ReflectionException | MBeanException | AttributeNotFoundException e) {
+      } catch (Exception e) {
         e.printStackTrace();
-        writer.println("ERROR:" + e.getMessage());
+        writer.println("ERROR_STRING:" + e.getMessage());
         writer.flush();
       }
     }
