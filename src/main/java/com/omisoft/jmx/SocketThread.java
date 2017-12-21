@@ -15,7 +15,7 @@ import javax.management.remote.JMXServiceURL;
 
 public class SocketThread implements Runnable {
 
-  public static final String ERROR_STRING = "ERROR_STRING:";
+  public static final String ERROR_STRING = "ERROR:";
   private final Socket s;
   private final BufferedReader reader;
   private final PrintWriter writer;
