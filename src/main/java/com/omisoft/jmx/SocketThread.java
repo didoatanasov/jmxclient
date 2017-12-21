@@ -30,29 +30,21 @@ public class SocketThread implements Runnable {
   public void run() {
     boolean runFlag = true;
     String connectionURL;
+    JMXConnector jmxConnector = null;
     try {
       connectionURL = reader.readLine();
-    } catch (IOException e) {
-      e.printStackTrace();
-      return;
-    }
+
     String[] args = connectionURL.split(":");
     String host = args[0];  // or some A.B.C.D
     int port = Integer.parseInt(args[1]);
     String url = "service:jmx:rmi:///jndi/rmi://" + host + ":" + port + "/jmxrmi";
     writer.flush();
     JMXServiceURL serviceUrl = null;
-    try {
-      serviceUrl = new JMXServiceURL(url);
-    } catch (MalformedURLException e) {
-      e.printStackTrace();
-      writer.println(ERROR_STRING + e.getMessage());
 
-    }
-    JMXConnector jmxConnector = null;
-    try {
+      serviceUrl = new JMXServiceURL(url);
+
       jmxConnector = JMXConnectorFactory.connect(serviceUrl, null);
-    } catch (Exception e) {
+    } catch (Throwable e) {
       e.printStackTrace();
       writer.println("ERROR_STRING:" + e.getMessage());
       try {
@@ -79,7 +71,7 @@ public class SocketThread implements Runnable {
 
       } catch (Exception e) {
         e.printStackTrace();
-        writer.println("ERROR_STRING:" + e.getMessage());
+        writer.println(ERROR_STRING + e.getMessage());
         writer.flush();
       }
     }
